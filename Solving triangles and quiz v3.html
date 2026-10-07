@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solving Triangles & Area Calculation (Complete Interactive Presentation)</title>
+  <!-- MathJax Configuration and Script -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #38bdf8;
+      --text-color: #f8fafc;
+      --muted-color: #94a3b8;
+      --border-color: #334155;
+      --golden-bg: #064e3b;
+      --golden-border: #10b981;
+      --casio-bg: #1e1b4b;
+      --casio-border: #6366f1;
+      --quiz-bg: #0f172a;
+      --hint-bg: #854d0e;
+      --hint-border: #eab308;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header-title {
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--accent-color);
+    }
+
+    .presentation-container {
+      width: 100%;
+      max-width: 920px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+      min-height: 620px;
+    }
+
+    .slide {
+      display: none;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    h2 {
+      color: var(--accent-color);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .diagram-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .example-box {
+      background-color: rgba(255, 255, 255, 0.03);
+      border-left: 4px solid var(--accent-color);
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .example-box h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #e2e8f0;
+    }
+
+    .solution {
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    .casio-example-rules {
+      background-color: var(--casio-bg);
+      border: 1px solid var(--casio-border);
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin-top: 15px;
+      font-size: 0.88rem;
+      color: #c7d2fe;
+      line-height: 1.5;
+    }
+
+    .casio-example-rules strong {
+      color: #818cf8;
+    }
+
+    /* MC Quiz Styles */
+    .quiz-section {
+      background-color: var(--quiz-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .quiz-section h3 {
+      color: var(--accent-color);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .mc-item {
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .mc-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .mc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .mc-question {
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .mc-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .mc-option-label {
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .mc-option-label:hover {
+      border-color: var(--accent-color);
+      background: #1e293b;
+    }
+
+    .mc-option-label input {
+      margin-right: 8px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hint-btn {
+      background-color: #eab308 !important;
+      color: #0f172a !important;
+      padding: 6px 12px !important;
+      font-size: 0.85rem !important;
+    }
+
+    .casio-btn {
+      background-color: #6366f1 !important;
+      color: #ffffff !important;
+      padding: 6px 12px !important;
+      font-size: 0.85rem !important;
+    }
+
+    .check-btn {
+      padding: 6px 14px !important;
+      font-size: 0.85rem !important;
+    }
+
+    .hint-box {
+      display: none;
+      background-color: var(--hint-bg);
+      border: 1px solid var(--hint-border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: #fef08a;
+    }
+
+    .casio-help-box {
+      display: none;
+      background-color: var(--casio-bg);
+      border: 1px solid var(--casio-border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #c7d2fe;
+      line-height: 1.5;
+    }
+
+    .casio-help-box strong {
+      color: #818cf8;
+    }
+
+    .feedback {
+      font-weight: bold;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    .feedback.correct {
+      color: #10b981;
+    }
+
+    .feedback.incorrect {
+      color: #f43f5e;
+    }
+
+    .golden-rule {
+      background-color: var(--golden-bg);
+      border: 1px solid var(--golden-border);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 920px;
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: var(--accent-color);
+      color: #0f172a;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #7dd3fc;
+    }
+
+    button:disabled {
+      background-color: var(--border-color);
+      color: var(--muted-color);
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      font-size: 0.9rem;
+      color: var(--muted-color);
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="header-title">Solving Triangles & Calculating Area (Complete Interactive Presentation)</h1>
+
+  <div class="presentation-container">
+
+    <!-- SLIDE 1: FORMULAS OVERVIEW -->
+    <div class="slide active">
+      <h2>Slide 1: Fundamental Formulas Reference</h2>
+      
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="50,130 290,130 180,30" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Angle Arcs -->
+          <path d="M 75,130 A 25,25 0 0,0 65,112" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <path d="M 265,130 A 25,25 0 0,1 268,110" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <path d="M 167,42 A 20,20 0 0,0 193,42" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <!-- Vertices -->
+          <text x="35" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="300" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="180" y="20" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <!-- Sides -->
+          <text x="170" y="148" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle">c (side AB)</text>
+          <text x="100" y="75" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="end">b (side AC)</text>
+          <text x="245" y="75" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="start">a (side BC)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>1. The Law of Sines</h3>
+        <div class="solution">
+          \[\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}\]
+          <p><em>Used primarily for ASA, AAS, and SSA (ambiguous) cases.</em></p>
+        </div>
+      </div>
+
+      <div class="example-box">
+        <h3>2. The Law of Cosines</h3>
+        <div class="solution">
+          \[a^2 = b^2 + c^2 - 2bc \cos A, \quad \cos A = \frac{b^2 + c^2 - a^2}{2bc}\]
+          \[b^2 = a^2 + c^2 - 2ac \cos B, \quad \cos B = \frac{a^2 + c^2 - b^2}{2ac}\]
+          \[c^2 = a^2 + b^2 - 2ab \cos C, \quad \cos C = \frac{a^2 + b^2 - c^2}{2ab}\]
+          <p><em>Used primarily for SSS and SAS cases.</em></p>
+        </div>
+      </div>
+
+      <div class="example-box">
+        <h3>3. Area Formulas</h3>
+        <div class="solution">
+          <p><strong>Standard Formula:</strong> \(\text{Area} = \frac{1}{2} \times \text{base} \times \text{height}\)</p>
+          <p><strong>SAS Formula:</strong> \(\text{Area} = \frac{1}{2}ab \sin C = \frac{1}{2}bc \sin A = \frac{1}{2}ac \sin B\)</p>
+          <p><strong>ASA / AAS Formula:</strong> \(\text{Area} = \frac{c^2 \sin A \sin B}{2 \sin C}\)</p>
+          <p><strong>Heron's Formula (SSS):</strong> \(\text{Area} = \sqrt{s(s-a)(s-b)(s-c)}\) where \(s = \frac{a+b+c}{2}\)</p>
+        </div>
+      </div>
+
+      <div class="golden-rule">
+        <strong>Golden Rule:</strong> Standard notation assumes triangle \(\triangle ABC\) with side lengths \(a, b, c\) opposite to angles \(\angle A, \angle B, \angle C\). Always ensure angle arguments are evaluated in degrees or radians matching your computational setup.
+      </div>
+    </div>
+
+    <!-- SLIDE 2: SSS ACUTE -->
+    <div class="slide">
+      <h2>Slide 2: SSS – Acute Triangle</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 170" width="340" height="170">
+          <polygon points="40,140 280,140 150,35" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="25" y="150" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="290" y="150" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="150" y="22" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="160" y="158" fill="#e2e8f0" font-size="13" text-anchor="middle">c = 7</text>
+          <text x="82" y="80" fill="#e2e8f0" font-size="13" text-anchor="end">b = 6</text>
+          <text x="228" y="80" fill="#e2e8f0" font-size="13" text-anchor="start">a = 5</text>
+          <text x="70" y="132" fill="#f59e0b" font-size="11">44.4°</text>
+          <text x="240" y="132" fill="#f59e0b" font-size="11">57.1°</text>
+          <text x="150" y="55" fill="#f59e0b" font-size="11" text-anchor="middle">78.5°</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 1: Given \(a = 5\), \(b = 6\), \(c = 7\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find angle \(\angle A\) using Law of Cosines</strong></p>
+          \[\cos A = \frac{b^2 + c^2 - a^2}{2bc} = \frac{6^2 + 7^2 - 5^2}{2(6)(7)} = \frac{60}{84} \implies \angle A \approx 44.42^\circ\]
+          <p><strong>Step 2: Find angle \(\angle B\) using Law of Cosines</strong></p>
+          \[\cos B = \frac{a^2 + c^2 - b^2}{2ac} = \frac{5^2 + 7^2 - 6^2}{2(5)(7)} = \frac{38}{70} \implies \angle B \approx 57.12^\circ\]
+          <p><strong>Step 3: Find angle \(\angle C\) using Angle Sum</strong></p>
+          \[\angle C = 180^\circ - 44.42^\circ - 57.12^\circ = 78.46^\circ\]
+          <p><strong>Step 4: Area using Heron's Formula</strong></p>
+          \[s = \frac{5+6+7}{2} = 9 \implies \text{Area} = \sqrt{9(4)(3)(2)} = \sqrt{216} \approx 14.70\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>5 EXE 6 EXE 7 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+          4. Step through output screens using <code>EXE</code> to observe variables D (&angle;A), X (&angle;B), Y (&angle;C), and final Area output.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        
+        <div class="mc-item" data-q="s2q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given triangle sides \(a = 4\), \(b = 5\), \(c = 6\). What is \(\angle C\)?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s2q1" value="A"> A) \(41.41^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q1" value="B"> B) \(82.82^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q1" value="C"> C) \(55.77^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q1" value="D"> D) \(90.00^\circ\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s2q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s2q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s2q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s2q1-fb"></div>
+          <div class="hint-box" id="s2q1-hint">
+            <strong>Hint:</strong> Apply the Law of Cosines formula: \(\cos C = \frac{a^2 + b^2 - c^2}{2ab}\). Substitute \(a=4, b=5, c=6\), then calculate \(\arccos(\cos C)\).
+          </div>
+          <div class="casio-help-box" id="s2q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>4 EXE 5 EXE 6 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> repeatedly to step through outputs for D (&angle;A), X (&angle;B), and Y (&angle;C).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s2q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate the area of a triangle with side lengths \(a = 7\), \(b = 8\), and \(c = 9\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s2q2" value="A"> A) \(26.83\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q2" value="B"> B) \(28.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q2" value="C"> C) \(24.25\)</label>
+            <label class="mc-option-label"><input type="radio" name="s2q2" value="D"> D) \(31.50\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s2q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s2q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s2q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s2q2-fb"></div>
+          <div class="hint-box" id="s2q2-hint">
+            <strong>Hint:</strong> Calculate semi-perimeter \(s = \frac{a+b+c}{2}\) and apply Heron's formula: \(\text{Area} = \sqrt{s(s-a)(s-b)(s-c)}\).
+          </div>
+          <div class="casio-help-box" id="s2q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>7 EXE 8 EXE 9 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> through sequence to display final Area screen.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="golden-rule">
+        <strong>Golden Rule:</strong> For SSS, use the Law of Cosines to find the largest angle first to eliminate ambiguity.
+      </div>
+    </div>
+
+    <!-- SLIDE 3: SSS OBTUSE -->
+    <div class="slide">
+      <h2>Slide 3: SSS – Obtuse Triangle</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="30,135 290,135 110,85" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="15" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="300" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="105" y="72" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="160" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">c = 6</text>
+          <text x="60" y="102" fill="#e2e8f0" font-size="13" text-anchor="end">b = 4</text>
+          <text x="210" y="102" fill="#e2e8f0" font-size="13" text-anchor="start">a = 3</text>
+          <text x="120" y="105" fill="#f59e0b" font-size="11">117.3°</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 2: Given \(a = 3\), \(b = 4\), \(c = 6\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find largest angle \(\angle C\) using Law of Cosines</strong></p>
+          \[\cos C = \frac{3^2 + 4^2 - 6^2}{2(3)(4)} = \frac{-11}{24} \approx -0.4583 \implies \angle C \approx 117.28^\circ\]
+          <p><strong>Step 2: Find angle \(\angle A\) using Law of Cosines</strong></p>
+          \[\cos A = \frac{4^2 + 6^2 - 3^2}{2(4)(6)} = \frac{43}{48} \approx 0.8958 \implies \angle A \approx 26.38^\circ\]
+          <p><strong>Step 3: Find angle \(\angle B\) using Angle Sum</strong></p>
+          \[\angle B = 180^\circ - 117.28^\circ - 26.38^\circ = 36.34^\circ\]
+          <p><strong>Step 4: Area using Heron's Formula</strong></p>
+          \[s = \frac{3+4+6}{2} = 6.5 \implies \text{Area} = \sqrt{6.5(3.5)(2.5)(0.5)} \approx 5.33\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>3 EXE 4 EXE 6 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+          4. Advance through <code>EXE</code> outputs to evaluate D (&angle;A), X (&angle;B), Y (&angle;C), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        
+        <div class="mc-item" data-q="s3q1" data-correct="C">
+          <div class="mc-header">
+            <div class="mc-question">Q1. If \(a = 2\), \(b = 3\), \(c = 4\), what is the nature of angle \(\angle C\)?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s3q1" value="A"> A) Acute (\(\cos C > 0\))</label>
+            <label class="mc-option-label"><input type="radio" name="s3q1" value="B"> B) Right (\(\cos C = 0\))</label>
+            <label class="mc-option-label"><input type="radio" name="s3q1" value="C"> C) Obtuse (\(\cos C < 0\))</label>
+            <label class="mc-option-label"><input type="radio" name="s3q1" value="D"> D) Straight Line</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s3q1', 'C')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s3q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s3q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s3q1-fb"></div>
+          <div class="hint-box" id="s3q1-hint">
+            <strong>Hint:</strong> Evaluate the sign of \(\cos C = \frac{a^2 + b^2 - c^2}{2ab}\). If \(\cos C < 0\), \(\angle C > 90^\circ\).
+          </div>
+          <div class="casio-help-box" id="s3q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>2 EXE 3 EXE 4 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Check the angle output for Y (&angle;C).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s3q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate \(\angle C\) for sides \(a=2, b=3, c=4\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s3q2" value="A"> A) \(104.48^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s3q2" value="B"> B) \(117.28^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s3q2" value="C"> C) \(98.52^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s3q2" value="D"> D) \(120.00^\circ\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s3q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s3q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s3q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s3q2-fb"></div>
+          <div class="hint-box" id="s3q2-hint">
+            <strong>Hint:</strong> Use \(\cos C = \frac{2^2 + 3^2 - 4^2}{2(2)(3)} = -0.25\) and take \(\arccos(-0.25)\).
+          </div>
+          <div class="casio-help-box" id="s3q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>2 EXE 3 EXE 4 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> consecutively to read output value representing Y (&angle;C).
+          </div>
+        </div>
+
+      </div>
+
+      <div class="golden-rule">
+        <strong>Golden Rule:</strong> A negative value in \(\cos C\) directly indicates an obtuse angle (\(\angle C > 90^\circ\)).
+      </div>
+    </div>
+
+    <!-- SLIDE 4: SSS RIGHT TRIANGLE -->
+    <div class="slide">
+      <h2>Slide 4: SSS – Right-Angled Triangle</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="60,135 280,135 60,35" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Right angle symbol -->
+          <rect x="60" y="120" width="15" height="15" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="50" y="25" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="290" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="42" y="145" fill="#f8fafc" font-size="15" font-weight="bold">C</text>
+          <text x="170" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">a = 3</text>
+          <text x="45" y="85" fill="#e2e8f0" font-size="13" text-anchor="end">b = 4</text>
+          <text x="180" y="75" fill="#e2e8f0" font-size="13" text-anchor="start">c = 5 (Hypotenuse)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 3: Given \(a = 3\), \(b = 4\), \(c = 5\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Check Pythagorean Theorem to find \(\angle C\)</strong></p>
+          \[3^2 + 4^2 = 5^2 \implies \angle C = 90^\circ\]
+          <p><strong>Step 2: Find angle \(\angle A\) using trigonometry</strong></p>
+          \[\sin A = \frac{a}{c} = \frac{3}{5} \implies \angle A \approx 36.87^\circ\]
+          <p><strong>Step 3: Find angle \(\angle B\) using Angle Sum</strong></p>
+          \[\angle B = 90^\circ - 36.87^\circ = 53.13^\circ\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}ab = \frac{1}{2}(3)(4) = 6\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>3 EXE 4 EXE 5 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+          4. Press <code>EXE</code> to cycle through outputs and verify D (&angle;A), X (&angle;B), Y (&angle;C = 90&deg;), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        
+        <div class="mc-item" data-q="s4q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given sides \(5, 12, 13\). What is the area of the triangle?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s4q1" value="A"> A) \(65\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q1" value="B"> B) \(30\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q1" value="C"> C) \(60\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q1" value="D"> D) \(32.5\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s4q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s4q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s4q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s4q1-fb"></div>
+          <div class="hint-box" id="s4q1-hint">
+            <strong>Hint:</strong> Check if \(5^2 + 12^2 = 13^2\). For a right triangle, \(\text{Area} = \frac{1}{2} \times \text{leg}_1 \times \text{leg}_2\).
+          </div>
+          <div class="casio-help-box" id="s4q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 12 EXE 13 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> through output sequence until Area calculation screen is reached.
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s4q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. For a 5-12-13 right triangle, what is the smallest angle?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s4q2" value="A"> A) \(22.62^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q2" value="B"> B) \(67.38^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q2" value="C"> C) \(25.00^\circ\)</label>
+            <label class="mc-option-label"><input type="radio" name="s4q2" value="D"> D) \(30.00^\circ\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s4q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s4q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s4q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s4q2-fb"></div>
+          <div class="hint-box" id="s4q2-hint">
+            <strong>Hint:</strong> The smallest angle lies opposite to the shortest side (\(a = 5\)). Calculate \(\arcsin(\frac{5}{13})\).
+          </div>
+          <div class="casio-help-box" id="s4q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 12 EXE 13 EXE 0 EXE 0 EXE 0 EXE</code>.<br>
+            • Check output D (&angle;A) facing shortest side a=5.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="golden-rule">
+        <strong>Golden Rule:</strong> When \(a^2 + b^2 = c^2\), standard right-angled trigonometry applies directly.
+      </div>
+    </div>
+
+    <!-- SLIDE 5: SAS ACUTE -->
+    <div class="slide">
+      <h2>Slide 5: SAS – Acute Angle Included</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,135 280,135 160,45" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <path d="M 70,135 A 30,30 0 0,0 60,120" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="290" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="160" y="32" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="75" y="128" fill="#f59e0b" font-size="12">40°</text>
+          <text x="160" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">c = 8</text>
+          <text x="90" y="80" fill="#e2e8f0" font-size="13" text-anchor="end">b = 6</text>
+          <text x="230" y="80" fill="#38bdf8" font-size="13" text-anchor="start">a = ? (5.14)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 4: Given \(b = 6\), \(c = 8\), \(\angle A = 40^\circ\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find side \(a\) using Law of Cosines</strong></p>
+          \[a = \sqrt{6^2 + 8^2 - 2(6)(8)\cos(40^\circ)} = \sqrt{100 - 96(0.7660)} = \sqrt{26.46} \approx 5.14\]
+          <p><strong>Step 2: Find angle \(\angle B\) using Law of Sines</strong></p>
+          \[\sin B = \frac{b \sin A}{a} = \frac{6 \sin(40^\circ)}{5.14} \approx \frac{3.8567}{5.14} \approx 0.7503 \implies \angle B \approx 48.62^\circ\]
+          <p><strong>Step 3: Find angle \(\angle C\) using Angle Sum</strong></p>
+          \[\angle C = 180^\circ - 40^\circ - 48.62^\circ = 91.38^\circ\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}bc \sin A = \frac{1}{2}(6)(8)\sin(40^\circ) \approx 15.43\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>0 EXE 6 EXE 8 EXE 40 EXE 0 EXE 0 EXE</code>.<br>
+          4. Read output sequence starting with calculated side A (a = 5.14), followed by remaining angles and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        
+        <div class="mc-item" data-q="s5q1" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(b=5\), \(c=7\), \(\angle A = 50^\circ\). Find side \(a\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s5q1" value="A"> A) \(5.39\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q1" value="B"> B) \(6.12\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q1" value="C"> C) \(4.85\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q1" value="D"> D) \(7.21\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s5q1', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s5q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s5q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s5q1-fb"></div>
+          <div class="hint-box" id="s5q1-hint">
+            <strong>Hint:</strong> Apply Law of Cosines for side a: \(a = \sqrt{b^2 + c^2 - 2bc \cos A}\). Substitute \(b=5, c=7, A=50^\circ\).
+          </div>
+          <div class="casio-help-box" id="s5q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 5 EXE 7 EXE 50 EXE 0 EXE 0 EXE</code>.<br>
+            • First output screen directly displays calculated side length A (a).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s5q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate area where \(b=5\), \(c=7\), \(\angle A = 50^\circ\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s5q2" value="A"> A) \(13.41\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q2" value="B"> B) \(17.50\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q2" value="C"> C) \(11.25\)</label>
+            <label class="mc-option-label"><input type="radio" name="s5q2" value="D"> D) \(15.82\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s5q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s5q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s5q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s5q2-fb"></div>
+          <div class="hint-box" id="s5q2-hint">
+            <strong>Hint:</strong> Use the SAS area formula: \(\text{Area} = \frac{1}{2}bc \sin A = \frac{1}{2}(5)(7)\sin(50^\circ)\).
+          </div>
+          <div class="casio-help-box" id="s5q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 5 EXE 7 EXE 50 EXE 0 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> until reaching the last screen to read Area output.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="golden-rule">
+        <strong>Golden Rule:</strong> SAS always results in a unique, unambiguous triangle solution.
+      </div>
+    </div>
+
+    <!-- SLIDE 6: SAS OBTUSE -->
+    <div class="slide">
+      <h2>Slide 6: SAS – Obtuse Angle Included</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,135 280,135 120,80" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">P</text>
+          <text x="290" y="145" fill="#f8fafc" font-size="15" font-weight="bold">Q</text>
+          <text x="115" y="65" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">R</text>
+          <text x="130" y="100" fill="#f59e0b" font-size="12">110°</text>
+          <text x="160" y="152" fill="#38bdf8" font-size="13" text-anchor="middle">r = ? (8.27)</text>
+          <text x="70" y="100" fill="#e2e8f0" font-size="13" text-anchor="end">q = 6</text>
+          <text x="210" y="100" fill="#e2e8f0" font-size="13" text-anchor="start">p = 4</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 5: Given \(p = 4\), \(q = 6\), \(\angle R = 110^\circ\) in \(\triangle PQR\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find side \(r\) using Law of Cosines</strong></p>
+          \[r = \sqrt{4^2 + 6^2 - 2(4)(6)\cos(110^\circ)} = \sqrt{16 + 36 - 48(-0.3420)} = \sqrt{68.42} \approx 8.27\]
+          <p><strong>Step 2: Find angle \(\angle P\) using Law of Sines</strong></p>
+          \[\sin P = \frac{p \sin R}{r} = \frac{4 \sin(110^\circ)}{8.27} \approx \frac{3.7588}{8.27} \approx 0.4545 \implies \angle P \approx 27.03^\circ\]
+          <p><strong>Step 3: Find angle \(\angle Q\) using Angle Sum</strong></p>
+          \[\angle Q = 180^\circ - 110^\circ - 27.03^\circ = 42.97^\circ\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}pq \sin R = \frac{1}{2}(4)(6)\sin(110^\circ) \approx 11.28\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>4 EXE 6 EXE 0 EXE 0 EXE 0 EXE 110 EXE</code>.<br>
+          4. Step through outputs with <code>EXE</code> to observe calculated side C (r = 8.27), angles D (&angle;P), X (&angle;Q), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s6q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(a = 5\), \(b = 8\), and \(\angle C = 120^\circ\). Find side length \(c\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s6q1" value="A"> A) \(9.85\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q1" value="B"> B) \(11.36\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q1" value="C"> C) \(7.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q1" value="D"> D) \(12.41\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s6q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s6q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s6q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s6q1-fb"></div>
+          <div class="hint-box" id="s6q1-hint">
+            <strong>Hint:</strong> Use Law of Cosines: \(c = \sqrt{a^2 + b^2 - 2ab \cos C}\). Note that \(\cos(120^\circ) = -0.5\), so \(c = \sqrt{25 + 64 - 2(5)(8)(-0.5)} = \sqrt{129}\).
+          </div>
+          <div class="casio-help-box" id="s6q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 8 EXE 0 EXE 0 EXE 0 EXE 120 EXE</code>.<br>
+            • Step through outputs with <code>EXE</code> to find side C (c).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s6q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate the area of a triangle with \(a = 5\), \(b = 8\), and \(\angle C = 120^\circ\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s6q2" value="A"> A) \(17.32\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q2" value="B"> B) \(20.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q2" value="C"> C) \(15.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s6q2" value="D"> D) \(23.09\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s6q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s6q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s6q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s6q2-fb"></div>
+          <div class="hint-box" id="s6q2-hint">
+            <strong>Hint:</strong> Apply Area formula: \(\text{Area} = \frac{1}{2}ab \sin C = \frac{1}{2}(5)(8)\sin(120^\circ) = 20 \times \frac{\sqrt{3}}{2}\).
+          </div>
+          <div class="casio-help-box" id="s6q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 8 EXE 0 EXE 0 EXE 0 EXE 120 EXE</code>.<br>
+            • Press <code>EXE</code> through to the last screen for Area.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> Note that \(\cos(110^\circ) < 0\), making \(-2ab\cos C\) positive.</div>
+    </div>
+
+    <!-- SLIDE 7: SAS RIGHT ANGLE -->
+    <div class="slide">
+      <h2>Slide 7: SAS – Right Angle Included</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="50,135 270,135 50,35" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <rect x="50" y="120" width="15" height="15" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="40" y="25" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="280" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="32" y="145" fill="#f8fafc" font-size="15" font-weight="bold">C</text>
+          <text x="160" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">a = 6</text>
+          <text x="35" y="85" fill="#e2e8f0" font-size="13" text-anchor="end">b = 8</text>
+          <text x="175" y="75" fill="#38bdf8" font-size="13" text-anchor="start">c = ? (10)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 6: Given \(a=6\), \(b=8\), \(\angle C=90^\circ\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find hypotenuse \(c\) using Pythagorean Theorem</strong></p>
+          \[c = \sqrt{a^2 + b^2} = \sqrt{6^2 + 8^2} = \sqrt{100} = 10\]
+          <p><strong>Step 2: Find angle \(\angle A\) using trigonometry</strong></p>
+          \[\tan A = \frac{a}{b} = \frac{6}{8} = 0.75 \implies \angle A \approx 36.87^\circ\]
+          <p><strong>Step 3: Find angle \(\angle B\) using Angle Sum</strong></p>
+          \[\angle B = 90^\circ - 36.87^\circ = 53.13^\circ\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}ab = \frac{1}{2}(6)(8) = 24\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>6 EXE 8 EXE 0 EXE 0 EXE 0 EXE 90 EXE</code>.<br>
+          4. Press <code>EXE</code> to view output values for side C (c = 10), angles D (&angle;A), X (&angle;B), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s7q1" data-correct="C">
+          <div class="mc-header">
+            <div class="mc-question">Q1. If \(a = 9\), \(b = 12\), and \(\angle C = 90^\circ\), what is the area of the triangle?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s7q1" value="A"> A) \(108\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q1" value="B"> B) \(67.5\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q1" value="C"> C) \(54\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q1" value="D"> D) \(45\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s7q1', 'C')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s7q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s7q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s7q1-fb"></div>
+          <div class="hint-box" id="s7q1-hint">
+            <strong>Hint:</strong> When included angle is \(90^\circ\), Area = \(\frac{1}{2}ab = \frac{1}{2}(9)(12)\).
+          </div>
+          <div class="casio-help-box" id="s7q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>9 EXE 12 EXE 0 EXE 0 EXE 0 EXE 90 EXE</code>.<br>
+            • Step through <code>EXE</code> to the last screen to view Area.
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s7q2" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Find hypotenuse side length \(c\) when \(a = 9\), \(b = 12\), and \(\angle C = 90^\circ\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s7q2" value="A"> A) \(13\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q2" value="B"> B) \(15\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q2" value="C"> C) \(16.5\)</label>
+            <label class="mc-option-label"><input type="radio" name="s7q2" value="D"> D) \(21\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s7q2', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s7q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s7q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s7q2-fb"></div>
+          <div class="hint-box" id="s7q2-hint">
+            <strong>Hint:</strong> Use Pythagorean Theorem: \(c = \sqrt{a^2 + b^2} = \sqrt{9^2 + 12^2} = \sqrt{225}\).
+          </div>
+          <div class="casio-help-box" id="s7q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>9 EXE 12 EXE 0 EXE 0 EXE 0 EXE 90 EXE</code>.<br>
+            • Read output screen for side C (c).
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> Special case of SAS where \(\sin(90^\circ) = 1\) simplifies area to \(\frac{1}{2}ab\).</div>
+    </div>
+
+    <!-- SLIDE 8: ASA ACUTE -->
+    <div class="slide">
+      <h2>Slide 8: ASA – Two Acute Angles</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="50,135 270,135 140,35" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="35" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="280" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="140" y="22" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="75" y="128" fill="#f59e0b" font-size="12">50°</text>
+          <text x="235" y="128" fill="#f59e0b" font-size="12">60°</text>
+          <text x="160" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">c = 10</text>
+          <text x="80" y="80" fill="#38bdf8" font-size="13" text-anchor="end">b = ? (9.22)</text>
+          <text x="220" y="80" fill="#38bdf8" font-size="13" text-anchor="start">a = ? (8.15)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 7: Given \(\angle A=50^\circ\), \(\angle B=60^\circ\), \(c=10\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find angle \(\angle C\) using Angle Sum Theorem</strong></p>
+          \[\angle C = 180^\circ - 50^\circ - 60^\circ = 70^\circ\]
+          <p><strong>Step 2: Find side \(a\) using Law of Sines</strong></p>
+          \[a = \frac{c \sin A}{\sin C} = \frac{10 \sin(50^\circ)}{\sin(70^\circ)} \approx \frac{7.6604}{0.9397} \approx 8.15\]
+          <p><strong>Step 3: Find side \(b\) using Law of Sines</strong></p>
+          \[b = \frac{c \sin B}{\sin C} = \frac{10 \sin(60^\circ)}{\sin(70^\circ)} \approx \frac{8.6603}{0.9397} \approx 9.22\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{c^2 \sin A \sin B}{2 \sin C} = \frac{10^2 \sin(50^\circ) \sin(60^\circ)}{2 \sin(70^\circ)} \approx 35.28\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>0 EXE 0 EXE 10 EXE 50 EXE 60 EXE 0 EXE</code>.<br>
+          4. Step through <code>EXE</code> sequence to view output parameters A (a = 8.15), B (b = 9.22), Y (&angle;C = 70&deg;), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s8q1" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 45^\circ\), \(\angle B = 75^\circ\), and included side \(c = 8\). Find side \(a\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s8q1" value="A"> A) \(6.53\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q1" value="B"> B) \(7.42\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q1" value="C"> C) \(5.89\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q1" value="D"> D) \(8.10\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s8q1', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s8q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s8q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s8q1-fb"></div>
+          <div class="hint-box" id="s8q1-hint">
+            <strong>Hint:</strong> First find \(\angle C = 180^\circ - 45^\circ - 75^\circ = 60^\circ\). Then use Law of Sines: \(a = \frac{c \sin A}{\sin C} = \frac{8 \sin(45^\circ)}{\sin(60^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s8q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 0 EXE 8 EXE 45 EXE 75 EXE 0 EXE</code>.<br>
+            • First output screen displays side length A (a).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s8q2" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate the area of the triangle where \(\angle A = 45^\circ\), \(\angle B = 75^\circ\), and \(c = 8\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s8q2" value="A"> A) \(21.40\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q2" value="B"> B) \(25.25\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q2" value="C"> C) \(32.10\)</label>
+            <label class="mc-option-label"><input type="radio" name="s8q2" value="D"> D) \(28.50\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s8q2', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s8q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s8q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s8q2-fb"></div>
+          <div class="hint-box" id="s8q2-hint">
+            <strong>Hint:</strong> Use ASA Area formula: \(\text{Area} = \frac{c^2 \sin A \sin B}{2 \sin C} = \frac{64 \sin(45^\circ) \sin(75^\circ)}{2 \sin(60^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s8q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 0 EXE 8 EXE 45 EXE 75 EXE 0 EXE</code>.<br>
+            • Advance via <code>EXE</code> to read final Area output.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> ASA allows finding the third angle immediately via Angle Sum Theorem.</div>
+    </div>
+
+    <!-- SLIDE 9: ASA OBTUSE -->
+    <div class="slide">
+      <h2>Slide 9: ASA – One Obtuse Angle</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="100,85 280,135 40,135" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="110" y="75" fill="#f8fafc" font-size="15" font-weight="bold">P</text>
+          <text x="290" y="145" fill="#f8fafc" font-size="15" font-weight="bold">Q</text>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">R</text>
+          <text x="115" y="110" fill="#f59e0b" font-size="12">110°</text>
+          <text x="245" y="128" fill="#f59e0b" font-size="12">30°</text>
+          <text x="180" y="120" fill="#e2e8f0" font-size="13" text-anchor="middle">r = 12</text>
+          <text x="65" y="105" fill="#38bdf8" font-size="13" text-anchor="end">q = ? (9.33)</text>
+          <text x="210" y="95" fill="#38bdf8" font-size="13" text-anchor="start">p = ? (17.54)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 8: Given \(\angle P=110^\circ\), \(\angle Q=30^\circ\), \(r=12\) in \(\triangle PQR\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find angle \(\angle R\) using Angle Sum Theorem</strong></p>
+          \[\angle R = 180^\circ - 110^\circ - 30^\circ = 40^\circ\]
+          <p><strong>Step 2: Find side \(p\) using Law of Sines</strong></p>
+          \[p = \frac{r \sin P}{\sin R} = \frac{12 \sin(110^\circ)}{\sin(40^\circ)} \approx \frac{11.2763}{0.6428} \approx 17.54\]
+          <p><strong>Step 3: Find side \(q\) using Law of Sines</strong></p>
+          \[q = \frac{r \sin Q}{\sin R} = \frac{12 \sin(30^\circ)}{\sin(40^\circ)} = \frac{6}{0.6428} \approx 9.33\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{r^2 \sin P \sin Q}{2 \sin R} = \frac{12^2 \sin(110^\circ) \sin(30^\circ)}{2 \sin(40^\circ)} \approx 52.61\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>0 EXE 0 EXE 12 EXE 110 EXE 30 EXE 0 EXE</code>.<br>
+          4. Press <code>EXE</code> through sequence to determine side A (p = 17.54), side B (q = 9.33), angle Y (&angle;R = 40&deg;), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s9q1" data-correct="D">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 105^\circ\), \(\angle B = 40^\circ\), and \(c = 10\). What is the area of \(\triangle ABC\)?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s9q1" value="A"> A) \(42.15\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q1" value="B"> B) \(28.90\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q1" value="C"> C) \(36.80\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q1" value="D"> D) \(54.42\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s9q1', 'D')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s9q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s9q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s9q1-fb"></div>
+          <div class="hint-box" id="s9q1-hint">
+            <strong>Hint:</strong> \(\angle C = 180^\circ - 105^\circ - 40^\circ = 35^\circ\). Area formula for ASA: \(\text{Area} = \frac{c^2 \sin A \sin B}{2 \sin C} = \frac{100 \sin(105^\circ) \sin(40^\circ)}{2 \sin(35^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s9q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 0 EXE 10 EXE 105 EXE 40 EXE 0 EXE</code>.<br>
+            • Advance through <code>EXE</code> to read final Area output.
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s9q2" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Find side length \(a\) when \(\angle A = 105^\circ\), \(\angle B = 40^\circ\), and \(c = 10\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s9q2" value="A"> A) \(14.20\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q2" value="B"> B) \(16.84\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q2" value="C"> C) \(18.50\)</label>
+            <label class="mc-option-label"><input type="radio" name="s9q2" value="D"> D) \(12.15\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s9q2', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s9q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s9q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s9q2-fb"></div>
+          <div class="hint-box" id="s9q2-hint">
+            <strong>Hint:</strong> \(\angle C = 35^\circ\). Use Law of Sines: \(a = \frac{c \sin A}{\sin C} = \frac{10 \sin(105^\circ)}{\sin(35^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s9q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>0 EXE 0 EXE 10 EXE 105 EXE 40 EXE 0 EXE</code>.<br>
+            • Read output value for side A (a).
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> Sum of two given angles must be strictly less than \(180^\circ\).</div>
+    </div>
+
+    <!-- SLIDE 10: AAS ACUTE -->
+    <div class="slide">
+      <h2>Slide 10: AAS – Acute Angle Case</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,135 240,135 140,30" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="250" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="140" y="20" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="65" y="128" fill="#f59e0b" font-size="12">40°</text>
+          <text x="205" y="128" fill="#f59e0b" font-size="12">70°</text>
+          <text x="205" y="80" fill="#e2e8f0" font-size="13" text-anchor="start">a = 8</text>
+          <text x="80" y="80" fill="#38bdf8" font-size="13" text-anchor="end">b = ? (11.7)</text>
+          <text x="140" y="152" fill="#38bdf8" font-size="13" text-anchor="middle">c = ? (11.7)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 9: Given \(\angle A=40^\circ\), \(\angle B=70^\circ\), \(a=8\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find angle \(\angle C\) using Angle Sum Theorem</strong></p>
+          \[\angle C = 180^\circ - 40^\circ - 70^\circ = 70^\circ\]
+          <p><strong>Step 2: Find side \(b\) using Law of Sines</strong></p>
+          \[b = \frac{a \sin B}{\sin A} = \frac{8 \sin(70^\circ)}{\sin(40^\circ)} \approx \frac{7.5175}{0.6428} \approx 11.70\]
+          <p><strong>Step 3: Find side \(c\) using Law of Sines</strong></p>
+          \[c = \frac{a \sin C}{\sin A} = \frac{8 \sin(70^\circ)}{\sin(40^\circ)} \approx 11.70 \quad (\text{Isosceles as } \angle B = \angle C)\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}ab \sin C = \frac{1}{2}(8)(11.70)\sin(70^\circ) \approx 44.00\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>8 EXE 0 EXE 0 EXE 40 EXE 70 EXE 0 EXE</code>.<br>
+          4. Step through with <code>EXE</code> to get side B (b = 11.70), side C (c = 11.70), angle Y (&angle;C = 70&deg;), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s10q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 35^\circ\), \(\angle B = 65^\circ\), and side \(a = 7\). Find side length \(b\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s10q1" value="A"> A) \(9.82\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q1" value="B"> B) \(11.06\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q1" value="C"> C) \(8.45\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q1" value="D"> D) \(12.30\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s10q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s10q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s10q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s10q1-fb"></div>
+          <div class="hint-box" id="s10q1-hint">
+            <strong>Hint:</strong> Use Law of Sines: \(\frac{a}{\sin A} = \frac{b}{\sin B} \implies b = \frac{7 \sin(65^\circ)}{\sin(35^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s10q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>7 EXE 0 EXE 0 EXE 35 EXE 65 EXE 0 EXE</code>.<br>
+            • Step through outputs with <code>EXE</code> to view side B (b).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s10q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate area of the triangle where \(\angle A = 35^\circ\), \(\angle B = 65^\circ\), and \(a = 7\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s10q2" value="A"> A) \(38.12\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q2" value="B"> B) \(42.50\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q2" value="C"> C) \(31.80\)</label>
+            <label class="mc-option-label"><input type="radio" name="s10q2" value="D"> D) \(35.00\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s10q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s10q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s10q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s10q2-fb"></div>
+          <div class="hint-box" id="s10q2-hint">
+            <strong>Hint:</strong> First \(\angle C = 180^\circ - 35^\circ - 65^\circ = 80^\circ\). Calculate \(b \approx 11.06\), then \(\text{Area} = \frac{1}{2}ab \sin C\).
+          </div>
+          <div class="casio-help-box" id="s10q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>7 EXE 0 EXE 0 EXE 35 EXE 65 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> to final screen for Area output.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> AAS can be directly converted into ASA by finding the 3rd angle first.</div>
+    </div>
+
+    <!-- SLIDE 11: AAS OBTUSE -->
+    <div class="slide">
+      <h2>Slide 11: AAS – Obtuse Angle Case</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,135 260,135 110,85" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">X</text>
+          <text x="110" y="72" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">Y</text>
+          <text x="270" y="145" fill="#f8fafc" font-size="15" font-weight="bold">Z</text>
+          <text x="65" y="128" fill="#f59e0b" font-size="12">25°</text>
+          <text x="120" y="105" fill="#f59e0b" font-size="12">120°</text>
+          <text x="200" y="102" fill="#e2e8f0" font-size="13" text-anchor="start">x = 6</text>
+          <text x="65" y="102" fill="#38bdf8" font-size="13" text-anchor="end">z = ? (8.14)</text>
+          <text x="150" y="152" fill="#38bdf8" font-size="13" text-anchor="middle">y = ? (12.30)</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 10: Given \(\angle X=25^\circ\), \(\angle Y=120^\circ\), \(x=6\) in \(\triangle XYZ\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Find angle \(\angle Z\) using Angle Sum Theorem</strong></p>
+          \[\angle Z = 180^\circ - 25^\circ - 120^\circ = 35^\circ\]
+          <p><strong>Step 2: Find side \(y\) using Law of Sines</strong></p>
+          \[y = \frac{x \sin Y}{\sin X} = \frac{6 \sin(120^\circ)}{\sin(25^\circ)} \approx \frac{5.1962}{0.4226} \approx 12.30\]
+          <p><strong>Step 3: Find side \(z\) using Law of Sines</strong></p>
+          \[z = \frac{x \sin Z}{\sin X} = \frac{6 \sin(35^\circ)}{\sin(25^\circ)} \approx \frac{3.4415}{0.4226} \approx 8.14\]
+          <p><strong>Step 4: Area Calculation</strong></p>
+          \[\text{Area} = \frac{1}{2}xy \sin Z = \frac{1}{2}(6)(12.30)\sin(35^\circ) \approx 21.16\]
+        </div>
+        <div class="casio-example-rules">
+          <strong>📟 Casio fx-50FH Execution Rules:</strong><br>
+          1. Set Mode: <code>MODE 1</code> (DEG) and <code>MODE 5 1</code> (REG Lin).<br>
+          2. Run <code>Prog 2</code>.<br>
+          3. Input format: <code>6 EXE 0 EXE 0 EXE 25 EXE 120 EXE 0 EXE</code>.<br>
+          4. Advance via <code>EXE</code> to read side B (y = 12.30), side C (z = 8.14), angle Y (&angle;Z = 35&deg;), and Area.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s11q1" data-correct="C">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 30^\circ\), \(\angle B = 115^\circ\), and non-included side \(a = 5\). Find side \(c\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s11q1" value="A"> A) \(4.82\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q1" value="B"> B) \(6.20\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q1" value="C"> C) \(5.74\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q1" value="D"> D) \(7.10\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s11q1', 'C')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s11q1-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s11q1-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s11q1-fb"></div>
+          <div class="hint-box" id="s11q1-hint">
+            <strong>Hint:</strong> \(\angle C = 180^\circ - 30^\circ - 115^\circ = 35^\circ\). Use Law of Sines: \(c = \frac{a \sin C}{\sin A} = \frac{5 \sin(35^\circ)}{\sin(30^\circ)}\).
+          </div>
+          <div class="casio-help-box" id="s11q1-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 0 EXE 0 EXE 30 EXE 115 EXE 0 EXE</code>.<br>
+            • Step through <code>EXE</code> outputs to locate side C (c).
+          </div>
+        </div>
+
+        <div class="mc-item" data-q="s11q2" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q2. Calculate area for \(\angle A = 30^\circ\), \(\angle B = 115^\circ\), and \(a = 5\).</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s11q2" value="A"> A) \(12.99\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q2" value="B"> B) \(15.40\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q2" value="C"> C) \(10.80\)</label>
+            <label class="mc-option-label"><input type="radio" name="s11q2" value="D"> D) \(14.25\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s11q2', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s11q2-hint')">💡 Show Hint</button>
+            <button class="casio-btn" onclick="toggleBox('s11q2-casio')">📟 Casio fx-50FH Help</button>
+          </div>
+          <div class="feedback" id="s11q2-fb"></div>
+          <div class="hint-box" id="s11q2-hint">
+            <strong>Hint:</strong> Calculate \(b = \frac{5 \sin(115^\circ)}{\sin(30^\circ)} \approx 9.06\), then \(\text{Area} = \frac{1}{2}ab \sin C = \frac{1}{2}(5)(9.06)\sin(35^\circ)\).
+          </div>
+          <div class="casio-help-box" id="s11q2-casio">
+            <strong>Casio fx-50FH Execution Rules:</strong><br>
+            • Mode Setup: Ensure <code>DEG</code> (MODE 1) and <code>REG Lin</code> (MODE 5 1).<br>
+            • Run <code>Prog 2</code>.<br>
+            • Input format: <code>5 EXE 0 EXE 0 EXE 30 EXE 115 EXE 0 EXE</code>.<br>
+            • Press <code>EXE</code> to final screen for Area output.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> In an obtuse AAS triangle, the largest side always lies opposite the obtuse angle.</div>
+    </div>
+
+    <!-- SLIDE 12: SSA AMBIGUOUS (TWO SOLUTIONS) -->
+    <div class="slide">
+      <h2>Slide 12: SSA – Ambiguous Case (Two Solutions)</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 170" width="340" height="170">
+          <line x1="20" y1="140" x2="310" y2="140" stroke="#475569" stroke-width="2" stroke-dasharray="4"/>
+          <!-- Triangle 1 (Obtuse) -->
+          <polygon points="40,140 125,35 175,140" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-width="2"/>
+          <!-- Triangle 2 (Acute extension) -->
+          <polygon points="40,140 125,35 265,140" fill="rgba(234, 179, 8, 0.08)" stroke="#eab308" stroke-width="2" stroke-dasharray="3,3"/>
+          <path d="M 175,140 A 90,90 0 0,0 265,140" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2,2"/>
+          <!-- Perpendicular height line -->
+          <line x1="125" y1="35" x2="125" y2="140" stroke="#10b981" stroke-width="1.5" stroke-dasharray="2"/>
+          
+          <text x="25" y="150" fill="#f8fafc" font-size="14" font-weight="bold">A</text>
+          <text x="125" y="22" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">C</text>
+          <text x="175" y="158" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">B₁</text>
+          <text x="265" y="158" fill="#eab308" font-size="13" font-weight="bold" text-anchor="middle">B₂</text>
+          <text x="65" y="128" fill="#f59e0b" font-size="11">30°</text>
+          <text x="75" y="80" fill="#e2e8f0" font-size="12" text-anchor="end">b = 10</text>
+          <text x="160" y="80" fill="#f43f5e" font-size="12">a = 7</text>
+          <text x="128" y="95" fill="#10b981" font-size="11">h = 5</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 11: Given \(\angle A = 30^\circ\), \(a = 7\), \(b = 10\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Check height condition</strong> \(h = b \sin A = 10 \sin(30^\circ) = 5\)</p>
+          <p>Since \(h < a < b\) (\(5 < 7 < 10\)), exactly <strong>TWO valid triangles</strong> exist!</p>
+          <p><strong>Solution 1 (Acute \(\angle B_1\)):</strong></p>
+          \[\sin B_1 = \frac{b \sin A}{a} = \frac{10(0.5)}{7} = 0.7143 \implies \angle B_1 \approx 45.58^\circ\]
+          \[\angle C_1 = 180^\circ - 30^\circ - 45.58^\circ = 104.42^\circ\]
+          <p><strong>Solution 2 (Obtuse \(\angle B_2\)):</strong></p>
+          \[\angle B_2 = 180^\circ - 45.58^\circ = 134.42^\circ\]
+          \[\angle C_2 = 180^\circ - 30^\circ - 134.42^\circ = 15.58^\circ\]
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s12q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 30^\circ\), \(b = 12\). What range of side \(a\) gives 2 solutions?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s12q1" value="A"> A) \(a < 6\)</label>
+            <label class="mc-option-label"><input type="radio" name="s12q1" value="B"> B) \(6 < a < 12\)</label>
+            <label class="mc-option-label"><input type="radio" name="s12q1" value="C"> C) \(a \ge 12\)</label>
+            <label class="mc-option-label"><input type="radio" name="s12q1" value="D"> D) \(a = 6\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s12q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s12q1-hint')">💡 Show Hint</button>
+          </div>
+          <div class="feedback" id="s12q1-fb"></div>
+          <div class="hint-box" id="s12q1-hint">
+            <strong>Hint:</strong> Height \(h = 12 \sin(30^\circ) = 6\). Two solutions exist when \(h < a < b\).
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> SSA yields two solutions when \(b \sin A < a < b\).</div>
+    </div>
+
+    <!-- SLIDE 13: SSA UNIQUE SOLUTION -->
+    <div class="slide">
+      <h2>Slide 13: SSA – Unique Solution Case</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,135 270,135 120,35" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="280" y="145" fill="#f8fafc" font-size="15" font-weight="bold">B</text>
+          <text x="120" y="22" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="65" y="128" fill="#f59e0b" font-size="12">30°</text>
+          <text x="70" y="80" fill="#e2e8f0" font-size="13" text-anchor="end">b = 8</text>
+          <text x="210" y="80" fill="#10b981" font-size="13" text-anchor="start">a = 12 (a ≥ b)</text>
+          <text x="155" y="152" fill="#e2e8f0" font-size="13" text-anchor="middle">c = 17.02</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 12: Given \(\angle A = 30^\circ\), \(a = 12\), \(b = 8\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Compare side lengths</strong></p>
+          <p>Since \(a \ge b\) (\(12 \ge 8\)), side \(a\) can only swing across the base in one direction, yielding <strong>EXACTLY ONE valid triangle</strong>.</p>
+          <p><strong>Step 2: Solve unique triangle</strong></p>
+          \[\sin B = \frac{b \sin A}{a} = \frac{8 \sin(30^\circ)}{12} = \frac{4}{12} = 0.3333 \implies \angle B \approx 19.47^\circ\]
+          \[\angle C = 180^\circ - 30^\circ - 19.47^\circ = 130.53^\circ\]
+          \[c = \frac{a \sin C}{\sin A} = \frac{12 \sin(130.53^\circ)}{\sin(30^\circ)} \approx 18.24\]
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s13q1" data-correct="C">
+          <div class="mc-header">
+            <div class="mc-question">Q1. If \(\angle A = 40^\circ\), \(b = 10\), and \(a = 15\), how many triangles are formed?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s13q1" value="A"> A) None</label>
+            <label class="mc-option-label"><input type="radio" name="s13q1" value="B"> B) Two</label>
+            <label class="mc-option-label"><input type="radio" name="s13q1" value="C"> C) Exactly One</label>
+            <label class="mc-option-label"><input type="radio" name="s13q1" value="D"> D) Infinitely Many</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s13q1', 'C')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s13q1-hint')">💡 Show Hint</button>
+          </div>
+          <div class="feedback" id="s13q1-fb"></div>
+          <div class="hint-box" id="s13q1-hint">
+            <strong>Hint:</strong> When \(a \ge b\), there is always exactly one unique solution.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> If \(a \ge b\), the SSA ambiguity vanishes and produces 1 solution.</div>
+    </div>
+
+    <!-- SLIDE 14: SSA NO SOLUTION -->
+    <div class="slide">
+      <h2>Slide 14: SSA – No Solution Case</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <line x1="20" y1="135" x2="310" y2="135" stroke="#475569" stroke-width="2" stroke-dasharray="4"/>
+          <!-- Height perpendicular -->
+          <line x1="130" y1="35" x2="130" y2="135" stroke="#10b981" stroke-width="1.5" stroke-dasharray="2"/>
+          <!-- Short swinging side -->
+          <line x1="40" y1="135" x2="130" y2="35" stroke="#38bdf8" stroke-width="2.5"/>
+          <line x1="130" y1="35" x2="165" y2="95" stroke="#f43f5e" stroke-width="2.5"/>
+          <path d="M 150,115 A 35,35 0 0,1 175,85" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2,2"/>
+          
+          <text x="25" y="145" fill="#f8fafc" font-size="15" font-weight="bold">A</text>
+          <text x="130" y="22" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">C</text>
+          <text x="65" y="125" fill="#f59e0b" font-size="12">30°</text>
+          <text x="75" y="80" fill="#e2e8f0" font-size="13" text-anchor="end">b = 10</text>
+          <text x="165" y="70" fill="#f43f5e" font-size="13">a = 4 (Too short!)</text>
+          <text x="133" y="95" fill="#10b981" font-size="11">h = 5</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 13: Given \(\angle A = 30^\circ\), \(a = 4\), \(b = 10\) in \(\triangle ABC\)</h3>
+        <div class="solution">
+          <p><strong>Step 1: Calculate vertical altitude \(h\)</strong></p>
+          \[h = b \sin A = 10 \sin(30^\circ) = 5\]
+          <p><strong>Step 2: Compare side length \(a\) to altitude \(h\)</strong></p>
+          <p>Since \(a < h\) (\(4 < 5\)), side \(a\) is too short to reach the base line. <strong>NO TRIANGLE CAN BE FORMED!</strong></p>
+          \[\sin B = \frac{10 \sin(30^\circ)}{4} = \frac{5}{4} = 1.25 > 1 \quad (\text{Impossible!})\]
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s14q1" data-correct="A">
+          <div class="mc-header">
+            <div class="mc-question">Q1. Given \(\angle A = 45^\circ\), \(b = 10\). Which value of \(a\) forms NO triangle?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s14q1" value="A"> A) \(a = 6\)</label>
+            <label class="mc-option-label"><input type="radio" name="s14q1" value="B"> B) \(a = 8\)</label>
+            <label class="mc-option-label"><input type="radio" name="s14q1" value="C"> C) \(a = 10\)</label>
+            <label class="mc-option-label"><input type="radio" name="s14q1" value="D"> D) \(a = 12\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s14q1', 'A')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s14q1-hint')">💡 Show Hint</button>
+          </div>
+          <div class="feedback" id="s14q1-fb"></div>
+          <div class="hint-box" id="s14q1-hint">
+            <strong>Hint:</strong> Minimum height \(h = 10 \sin(45^\circ) \approx 7.07\). Any \(a < 7.07\) gives no solution.
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> If \(a < b \sin A\), \(\sin B > 1\), meaning no triangle exists.</div>
+    </div>
+
+    <!-- SLIDE 15: PRACTICAL APPLICATION 1 -->
+    <div class="slide">
+      <h2>Slide 15: Practical Application – Bearings & Distances</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 170" width="340" height="170">
+          <!-- Compass Grid at P -->
+          <line x1="60" y1="110" x2="60" y2="30" stroke="#475569" stroke-width="1.5" stroke-dasharray="3"/>
+          <text x="60" y="22" fill="#94a3b8" font-size="11" text-anchor="middle">N</text>
+          <!-- Compass Grid at Q -->
+          <line x1="170" y1="100" x2="170" y2="20" stroke="#475569" stroke-width="1.5" stroke-dasharray="3"/>
+          <text x="170" y="15" fill="#94a3b8" font-size="11" text-anchor="middle">N</text>
+          
+          <!-- Path -->
+          <polygon points="60,110 170,50 270,120" fill="rgba(56, 189, 248, 0.1)" stroke="#38bdf8" stroke-width="2.5"/>
+          
+          <!-- Bearing arcs -->
+          <path d="M 60,85 A 25,25 0 0,1 78,98" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="80" y="80" fill="#f59e0b" font-size="10">060°</text>
+
+          <text x="48" y="120" fill="#f8fafc" font-size="14" font-weight="bold">P</text>
+          <text x="175" y="45" fill="#f8fafc" font-size="14" font-weight="bold">Q</text>
+          <text x="282" y="130" fill="#f8fafc" font-size="14" font-weight="bold">R</text>
+
+          <text x="105" y="70" fill="#e2e8f0" font-size="12">10 km</text>
+          <text x="230" y="75" fill="#e2e8f0" font-size="12">15 km</text>
+          <text x="160" y="135" fill="#38bdf8" font-size="12" text-anchor="middle">PR = ?</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 14: Navigation Problem in \(\triangle PQR\)</h3>
+        <div class="solution">
+          <p>A ship departs Point P on bearing 060° for 10 km to Q, then turns on bearing 150° for 15 km to R.</p>
+          <p><strong>Step 1: Find included interior angle \(\angle Q\)</strong></p>
+          \[\angle Q = (180^\circ - 60^\circ) + 150^\circ = 120^\circ + 150^\circ = 270^\circ \implies \text{Interior } \angle Q = 360^\circ - 270^\circ = 90^\circ\]
+          <p><strong>Step 2: Calculate direct distance PR</strong></p>
+          \[PR = \sqrt{10^2 + 15^2} = \sqrt{100 + 225} = \sqrt{325} \approx 18.03\text{ km}\]
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s15q1" data-correct="B">
+          <div class="mc-header">
+            <div class="mc-question">Q1. What is the distance PR rounded to 1 decimal place?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s15q1" value="A"> A) \(16.5\text{ km}\)</label>
+            <label class="mc-option-label"><input type="radio" name="s15q1" value="B"> B) \(18.0\text{ km}\)</label>
+            <label class="mc-option-label"><input type="radio" name="s15q1" value="C"> C) \(20.2\text{ km}\)</label>
+            <label class="mc-option-label"><input type="radio" name="s15q1" value="D"> D) \(25.0\text{ km}\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s15q1', 'B')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s15q1-hint')">💡 Show Hint</button>
+          </div>
+          <div class="feedback" id="s15q1-fb"></div>
+          <div class="hint-box" id="s15q1-hint">
+            <strong>Hint:</strong> Apply Pythagorean theorem since interior angle at Q is \(90^\circ\).
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> Draw parallel North lines at each vertex to find interior angles.</div>
+    </div>
+
+    <!-- SLIDE 16: PRACTICAL APPLICATION 2 -->
+    <div class="slide">
+      <h2>Slide 16: Composite Figure & Quadrilateral Area</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <polygon points="40,125 180,135 280,50 110,25" fill="rgba(56, 189, 248, 0.08)" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Diagonal AC -->
+          <line x1="40" y1="125" x2="280" y2="50" stroke="#eab308" stroke-width="2" stroke-dasharray="4"/>
+          
+          <text x="25" y="135" fill="#f8fafc" font-size="14" font-weight="bold">A</text>
+          <text x="185" y="150" fill="#f8fafc" font-size="14" font-weight="bold">B</text>
+          <text x="290" y="50" fill="#f8fafc" font-size="14" font-weight="bold">C</text>
+          <text x="105" y="18" fill="#f8fafc" font-size="14" font-weight="bold">D</text>
+
+          <text x="105" y="142" fill="#e2e8f0" font-size="11">6</text>
+          <text x="240" y="105" fill="#e2e8f0" font-size="11">8</text>
+          <text x="195" y="30" fill="#e2e8f0" font-size="11">7</text>
+          <text x="65" y="70" fill="#e2e8f0" font-size="11">9</text>
+          <text x="160" y="80" fill="#eab308" font-size="11">Diagonal AC</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Example 15: Area of Quadrilateral ABCD</h3>
+        <div class="solution">
+          <p>Split quadrilateral ABCD into \(\triangle ABC\) and \(\triangle ADC\) using diagonal AC.</p>
+          <p><strong>Step 1: Area of \(\triangle ABC\) (Given \(AB=6, BC=8, \angle B=60^\circ\))</strong></p>
+          \[\text{Area}_1 = \frac{1}{2}(6)(8)\sin(60^\circ) = 24(0.8660) \approx 20.78\]
+          <p><strong>Step 2: Find diagonal length AC using Law of Cosines</strong></p>
+          \[AC = \sqrt{6^2 + 8^2 - 2(6)(8)\cos(60^\circ)} = \sqrt{100 - 48} = \sqrt{52} \approx 7.21\]
+          <p><strong>Step 3: Area of \(\triangle ADC\) using Heron's Formula (\(AD=9, CD=7, AC=7.21\))</strong></p>
+          \[s = \frac{9 + 7 + 7.21}{2} = 11.605 \implies \text{Area}_2 \approx 24.87\]
+          <p><strong>Total Quadrilateral Area:</strong> \(20.78 + 24.87 = 45.65\)</p>
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Practice MC Questions</h3>
+        <div class="mc-item" data-q="s16q1" data-correct="C">
+          <div class="mc-header">
+            <div class="mc-question">Q1. What is the length of diagonal AC?</div>
+          </div>
+          <div class="mc-options">
+            <label class="mc-option-label"><input type="radio" name="s16q1" value="A"> A) \(8.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s16q1" value="B"> B) \(10.00\)</label>
+            <label class="mc-option-label"><input type="radio" name="s16q1" value="C"> C) \(7.21\)</label>
+            <label class="mc-option-label"><input type="radio" name="s16q1" value="D"> D) \(6.50\)</label>
+          </div>
+          <div class="action-row">
+            <button class="check-btn" onclick="checkSingleAnswer('s16q1', 'C')">Check Answer</button>
+            <button class="hint-btn" onclick="toggleBox('s16q1-hint')">💡 Show Hint</button>
+          </div>
+          <div class="feedback" id="s16q1-fb"></div>
+          <div class="hint-box" id="s16q1-hint">
+            <strong>Hint:</strong> Apply Law of Cosines on \(\triangle ABC\): \(AC = \sqrt{6^2+8^2-2(6)(8)\cos 60^\circ}\).
+          </div>
+        </div>
+      </div>
+
+      <div class="golden-rule"><strong>Golden Rule:</strong> Divide complex 2D polygons into non-overlapping triangles.</div>
+    </div>
+
+    <!-- SLIDE 17: COMPREHENSIVE SUMMARY MATRIX -->
+    <div class="slide">
+      <h2>Slide 17: Master Summary & Decision Tree</h2>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 340 160" width="340" height="160">
+          <rect x="20" y="20" width="90" height="40" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="65" y="45" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle">SSS / SAS</text>
+
+          <rect x="125" y="20" width="90" height="40" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <text x="170" y="45" fill="#f59e0b" font-size="12" font-weight="bold" text-anchor="middle">ASA / AAS</text>
+
+          <rect x="230" y="20" width="90" height="40" rx="6" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+          <text x="275" y="45" fill="#f43f5e" font-size="12" font-weight="bold" text-anchor="middle">SSA (Check h)</text>
+
+          <!-- Arrows down -->
+          <line x1="65" y1="60" x2="65" y2="95" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+          <line x1="170" y1="60" x2="170" y2="95" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="275" y1="60" x2="275" y2="95" stroke="#94a3b8" stroke-width="2"/>
+
+          <rect x="20" y="95" width="90" height="45" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+          <text x="65" y="118" fill="#10b981" font-size="11" text-anchor="middle">Law of Cosines</text>
+          <text x="65" y="132" fill="#e2e8f0" font-size="10" text-anchor="middle">Heron's Area</text>
+
+          <rect x="125" y="95" width="90" height="45" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+          <text x="170" y="118" fill="#10b981" font-size="11" text-anchor="middle">Law of Sines</text>
+          <text x="170" y="132" fill="#e2e8f0" font-size="10" text-anchor="middle">ASA Area</text>
+
+          <rect x="230" y="95" width="90" height="45" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+          <text x="275" y="115" fill="#10b981" font-size="10" text-anchor="middle">0, 1, or 2</text>
+          <text x="275" y="130" fill="#e2e8f0" font-size="10" text-anchor="middle">Triangles</text>
+        </svg>
+      </div>
+
+      <div class="example-box">
+        <h3>Triangle Solving Strategy Cheat Sheet</h3>
+        <div class="solution">
+          <ul style="padding-left: 20px; line-height: 1.8;">
+            <li><strong>SSS:</strong> Law of Cosines for largest angle first \(\to\) Law of Cosines/Sines \(\to\) Heron's Formula.</li>
+            <li><strong>SAS:</strong> Law of Cosines for missing side \(\to\) Law of Sines for smaller angle \(\to\) Area = \(\frac{1}{2}ab \sin C\).</li>
+            <li><strong>ASA / AAS:</strong> Angle Sum Theorem (\(180^\circ - A - B\)) \(\to\) Law of Sines for sides \(\to\) ASA Area Formula.</li>
+            <li><strong>SSA:</strong> Compare side \(a\) with altitude \(h = b \sin A\):
+              <ul style="padding-left: 20px;">
+                <li>\(a < h \implies 0\) solutions</li>
+                <li>\(a = h\) or \(a \ge b \implies 1\) unique solution</li>
+                <li>\(h < a < b \implies 2\) distinct solutions</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="golden-rule">
+        <strong>Final Takeaway:</strong> Master the Casio fx-50FH <code>Prog 2</code> execution rules and always verify physical feasibility when working with ambiguous SSA cases!
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION CONTROLS -->
+  <div class="controls">
+    <button id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+    <span class="page-indicator" id="pageIndicator">Slide 1 of 17</span>
+    <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+
+    function updateSlideVisibility() {
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      pageIndicator.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+      prevBtn.disabled = (currentSlide === 0);
+      nextBtn.disabled = (currentSlide === totalSlides - 1);
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 0) currentSlide = 0;
+      if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+      updateSlideVisibility();
+    }
+
+    function toggleBox(boxId) {
+      const box = document.getElementById(boxId);
+      if (box) {
+        if (box.style.display === 'block') {
+          box.style.display = 'none';
+        } else {
+          box.style.display = 'block';
+        }
+      }
+    }
+
+    function checkSingleAnswer(questionId, correctAnswer) {
+      const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+      const feedback = document.getElementById(`${questionId}-fb`);
+
+      if (!selected) {
+        feedback.textContent = 'Please select an option first!';
+        feedback.className = 'feedback incorrect';
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedback.textContent = '✓ Correct! Excellent work.';
+        feedback.className = 'feedback correct';
+      } else {
+        feedback.textContent = `✗ Incorrect. The correct answer is ${correctAnswer}.`;
+        feedback.className = 'feedback incorrect';
+      }
+    }
+
+    // Initialize initial state
+    updateSlideVisibility();
+  </script>
+</body>
+</html>
